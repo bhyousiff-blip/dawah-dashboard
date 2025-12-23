@@ -1,0 +1,953 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Global Dawah Center | TV Display</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #0a1628 0%, #0f2744 50%, #0a1628 100%);
+            min-height: 100vh;
+            color: white;
+            overflow: hidden;
+        }
+
+        .tv-dashboard {
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            padding: 25px 35px 80px 35px; /* مساحة للشريط السفلي */
+        }
+
+        /* Header */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-bottom: 25px;
+            border-bottom: 2px solid rgba(255,255,255,0.1);
+        }
+
+        .logo-section {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .logo {
+            height: 60px;
+            filter: drop-shadow(0 0 10px rgba(212, 175, 55, 0.3));
+        }
+
+        .title-section {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .title {
+            font-size: 2em;
+            font-weight: 800;
+            color: white;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .subtitle {
+            font-size: 0.95em;
+            color: #d4af37;
+            font-weight: 500;
+            margin-top: 4px;
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 30px;
+        }
+
+        .live-badge {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            background: rgba(16, 185, 129, 0.2);
+            border: 2px solid #10b981;
+            padding: 12px 25px;
+            border-radius: 50px;
+            font-size: 1.2em;
+            font-weight: 700;
+            color: #10b981;
+        }
+
+        .live-dot {
+            width: 14px;
+            height: 14px;
+            background: #10b981;
+            border-radius: 50%;
+            animation: pulse 1.5s infinite;
+            box-shadow: 0 0 20px #10b981;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.3); opacity: 0.7; }
+        }
+
+        .time-display {
+            text-align: right;
+        }
+
+        .time {
+            font-size: 2.5em;
+            font-weight: 800;
+            color: white;
+        }
+
+        .date {
+            font-size: 1.1em;
+            color: rgba(255,255,255,0.6);
+            margin-top: 5px;
+        }
+
+        /* Main Stats */
+        .main-stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 25px;
+            padding: 25px 0;
+        }
+
+        .stat-card {
+            background: linear-gradient(135deg, var(--bg-start), var(--bg-end));
+            border-radius: 20px;
+            padding: 25px 30px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(180deg, rgba(255,255,255,0.1) 0%, transparent 50%);
+            pointer-events: none;
+        }
+
+        .stat-card.blue { --bg-start: #2563eb; --bg-end: #1d4ed8; }
+        .stat-card.purple { --bg-start: #7c3aed; --bg-end: #6d28d9; }
+        .stat-card.green { --bg-start: #059669; --bg-end: #047857; }
+
+        .stat-icon {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            filter: drop-shadow(0 5px 15px rgba(0,0,0,0.3));
+        }
+
+        .stat-value {
+            font-size: 4em;
+            font-weight: 900;
+            line-height: 1;
+            margin-bottom: 8px;
+            text-shadow: 0 4px 20px rgba(0,0,0,0.3);
+        }
+
+        .stat-label {
+            font-size: 1.2em;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            opacity: 0.9;
+        }
+
+        /* Map Section */
+        .map-section {
+            flex: 1;
+            display: flex;
+            gap: 30px;
+            padding: 20px 0;
+        }
+
+        .map-container {
+            flex: 1.5;
+            background: rgba(255,255,255,0.03);
+            border-radius: 24px;
+            border: 1px solid rgba(255,255,255,0.1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .world-map {
+            width: 100%;
+            height: 100%;
+        }
+
+        /* Countries Panel */
+        .countries-panel {
+            width: 400px;
+            background: rgba(255,255,255,0.03);
+            border-radius: 24px;
+            border: 1px solid rgba(255,255,255,0.1);
+            padding: 25px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .panel-title {
+            font-size: 1.3em;
+            font-weight: 700;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            color: #fbbf24;
+        }
+
+        .countries-list {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .country-item {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 18px 20px;
+            background: rgba(255,255,255,0.05);
+            border-radius: 16px;
+            transition: all 0.3s;
+        }
+
+        .country-item:hover {
+            background: rgba(255,255,255,0.1);
+            transform: translateX(-5px);
+        }
+
+        .country-rank {
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 800;
+            font-size: 1.1em;
+        }
+
+        .country-item:nth-child(1) .country-rank { background: linear-gradient(135deg, #fbbf24, #f59e0b); color: #000; }
+        .country-item:nth-child(2) .country-rank { background: linear-gradient(135deg, #94a3b8, #64748b); color: #fff; }
+        .country-item:nth-child(3) .country-rank { background: linear-gradient(135deg, #cd7f32, #a0522d); color: #fff; }
+        .country-item:nth-child(4) .country-rank { background: rgba(255,255,255,0.1); color: #fff; }
+        .country-item:nth-child(5) .country-rank { background: rgba(255,255,255,0.1); color: #fff; }
+
+        .country-flag {
+            font-size: 2.2em;
+        }
+
+        .country-info {
+            flex: 1;
+        }
+
+        .country-name {
+            font-size: 1.2em;
+            font-weight: 600;
+        }
+
+        .country-sub {
+            font-size: 0.85em;
+            color: rgba(255,255,255,0.5);
+        }
+
+        .country-value {
+            font-size: 1.8em;
+            font-weight: 800;
+            color: #10b981;
+        }
+
+        /* Bottom Stats */
+        .bottom-stats {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 15px;
+            padding-top: 20px;
+            margin-top: auto;
+            border-top: 2px solid rgba(255,255,255,0.1);
+        }
+
+        .bottom-stat {
+            background: rgba(255,255,255,0.08);
+            border-radius: 14px;
+            padding: 16px;
+            text-align: center;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .bottom-stat-label {
+            font-size: 0.85em;
+            color: rgba(255,255,255,0.6);
+            margin-bottom: 6px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: 600;
+        }
+
+        .bottom-stat-value {
+            font-size: 2em;
+            font-weight: 800;
+            color: #fbbf24;
+        }
+
+        .bottom-stat-change {
+            font-size: 0.85em;
+            color: #10b981;
+            margin-top: 4px;
+            font-weight: 600;
+        }
+
+        /* Alert Banner */
+        .alert-banner {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(135deg, #10b981, #059669);
+            padding: 25px 40px;
+            align-items: center;
+            justify-content: center;
+            gap: 20px;
+            font-size: 1.8em;
+            font-weight: 700;
+            z-index: 1000;
+            animation: slideDown 0.5s ease-out;
+        }
+
+        .alert-banner.show {
+            display: flex;
+        }
+
+        @keyframes slideDown {
+            from { transform: translateY(-100%); }
+            to { transform: translateY(0); }
+        }
+
+        .alert-icon {
+            font-size: 1.5em;
+            animation: bounce 0.5s infinite alternate;
+        }
+
+        @keyframes bounce {
+            from { transform: scale(1); }
+            to { transform: scale(1.2); }
+        }
+
+        /* Last Shahadah Ticker */
+        .ticker {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: rgba(0,0,0,0.9);
+            padding: 12px 30px;
+            display: flex;
+            align-items: center;
+            gap: 25px;
+            font-size: 1em;
+            border-top: 2px solid #10b981;
+        }
+
+        .ticker-label {
+            color: #fbbf24;
+            font-weight: 600;
+            white-space: nowrap;
+        }
+
+        .ticker-content {
+            color: rgba(255,255,255,0.8);
+        }
+
+        /* Animations */
+        @keyframes countUp {
+            from { opacity: 0; transform: scale(0.8); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        .stat-value {
+            animation: countUp 0.8s ease-out;
+        }
+    </style>
+</head>
+<body>
+    <!-- Alert Banner -->
+    <div class="alert-banner" id="alertBanner">
+        <span class="alert-icon">🎉</span>
+        <span id="alertText">NEW SHAHADAH FROM KENYA! ALLAHU AKBAR!</span>
+        <span class="alert-icon">☪️</span>
+    </div>
+
+    <div class="tv-dashboard">
+        <!-- Header -->
+        <header class="header">
+            <div class="logo-section">
+                <img src="logo-bennfir.png" class="logo" alt="Discover Islam Society" onerror="this.style.display='none'">
+                <div class="title-section">
+                    <span class="title">Chatbot Summary</span>
+                    <span class="subtitle">by Discover Islam Society - Bahrain</span>
+                </div>
+            </div>
+            <div class="header-right">
+                <div class="live-badge">
+                    <span class="live-dot"></span>
+                    <span>LIVE</span>
+                </div>
+                <div class="time-display">
+                    <div class="time" id="currentTime">--:--:--</div>
+                    <div class="date" id="currentDate">---</div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Stats -->
+        <section class="main-stats">
+            <div class="stat-card blue">
+                <div class="stat-icon">💬</div>
+                <div class="stat-value" id="totalMessages">144,847</div>
+                <div class="stat-label">Messages</div>
+            </div>
+            <div class="stat-card purple">
+                <div class="stat-icon">📋</div>
+                <div class="stat-value" id="totalDetails">12,489</div>
+                <div class="stat-label">Details Given</div>
+            </div>
+            <div class="stat-card green">
+                <div class="stat-icon">☪️</div>
+                <div class="stat-value" id="totalShahadahs">4,589</div>
+                <div class="stat-label">Shahadahs</div>
+            </div>
+        </section>
+
+        <!-- Map & Countries -->
+        <section class="map-section">
+            <div class="map-container">
+                <svg class="world-map" viewBox="0 0 1000 500" preserveAspectRatio="xMidYMid slice">
+                    <defs>
+                        <radialGradient id="earthGlow" cx="50%" cy="50%" r="50%">
+                            <stop offset="0%" style="stop-color:#1e3a5f;stop-opacity:1" />
+                            <stop offset="100%" style="stop-color:#0a1628;stop-opacity:1" />
+                        </radialGradient>
+                        <filter id="glow">
+                            <feGaussianBlur stdDeviation="3" result="coloredBlur"/>
+                            <feMerge>
+                                <feMergeNode in="coloredBlur"/>
+                                <feMergeNode in="SourceGraphic"/>
+                            </feMerge>
+                        </filter>
+                        <filter id="strongGlow">
+                            <feGaussianBlur stdDeviation="6" result="coloredBlur"/>
+                            <feMerge>
+                                <feMergeNode in="coloredBlur"/>
+                                <feMergeNode in="SourceGraphic"/>
+                            </feMerge>
+                        </filter>
+                    </defs>
+                    
+                    <!-- Background -->
+                    <rect width="1000" height="500" fill="url(#earthGlow)"/>
+                    
+                    <!-- Grid lines -->
+                    <g stroke="rgba(255,255,255,0.05)" stroke-width="1">
+                        <line x1="0" y1="250" x2="1000" y2="250"/>
+                        <line x1="500" y1="0" x2="500" y2="500"/>
+                        <line x1="0" y1="125" x2="1000" y2="125"/>
+                        <line x1="0" y1="375" x2="1000" y2="375"/>
+                        <line x1="250" y1="0" x2="250" y2="500"/>
+                        <line x1="750" y1="0" x2="750" y2="500"/>
+                    </g>
+                    
+                    <!-- Africa Continent -->
+                    <path d="M420,140 L480,130 L540,140 L570,180 L590,240 L600,300 L590,360 L560,420 L500,450 L440,440 L400,400 L380,340 L370,280 L380,220 L400,170 Z" 
+                          fill="#1e4d6b" stroke="#3b82f6" stroke-width="2" opacity="0.8"/>
+                    
+                    <!-- Asia Part -->
+                    <path d="M580,80 L700,60 L820,80 L880,140 L900,220 L880,300 L820,340 L740,330 L660,300 L600,250 L580,180 Z"
+                          fill="#1e4d6b" stroke="#3b82f6" stroke-width="2" opacity="0.6"/>
+                    
+                    <!-- Middle East -->
+                    <path d="M540,150 L600,140 L640,180 L620,230 L560,240 L530,200 Z"
+                          fill="#1e4d6b" stroke="#3b82f6" stroke-width="2" opacity="0.7"/>
+
+                    <!-- Country Markers with Labels -->
+                    
+                    <!-- Kenya -->
+                    <g class="country-marker" filter="url(#strongGlow)">
+                        <circle cx="560" cy="290" r="12" fill="#10b981"/>
+                        <circle cx="560" cy="290" r="18" fill="none" stroke="#10b981" stroke-width="2" opacity="0.5">
+                            <animate attributeName="r" values="12;22;12" dur="2s" repeatCount="indefinite"/>
+                            <animate attributeName="opacity" values="0.8;0;0.8" dur="2s" repeatCount="indefinite"/>
+                        </circle>
+                        <text x="560" y="320" text-anchor="middle" fill="#10b981" font-size="16" font-weight="700">Kenya</text>
+                    </g>
+                    
+                    <!-- Uganda -->
+                    <g class="country-marker" filter="url(#glow)">
+                        <circle cx="540" cy="265" r="10" fill="#10b981"/>
+                        <text x="510" y="255" text-anchor="middle" fill="#10b981" font-size="14" font-weight="600">Uganda</text>
+                    </g>
+                    
+                    <!-- Ethiopia -->
+                    <g class="country-marker" filter="url(#glow)">
+                        <circle cx="580" cy="240" r="9" fill="#3b82f6"/>
+                        <text x="580" y="220" text-anchor="middle" fill="#3b82f6" font-size="14" font-weight="600">Ethiopia</text>
+                    </g>
+                    
+                    <!-- Malawi -->
+                    <g class="country-marker" filter="url(#glow)">
+                        <circle cx="565" cy="350" r="10" fill="#10b981"/>
+                        <text x="595" y="355" text-anchor="start" fill="#10b981" font-size="14" font-weight="600">Malawi</text>
+                    </g>
+                    
+                    <!-- Tanzania -->
+                    <g class="country-marker" filter="url(#glow)">
+                        <circle cx="560" cy="315" r="8" fill="#3b82f6"/>
+                        <text x="590" y="315" text-anchor="start" fill="#3b82f6" font-size="13" font-weight="600">Tanzania</text>
+                    </g>
+                    
+                    <!-- Zimbabwe -->
+                    <g class="country-marker" filter="url(#glow)">
+                        <circle cx="540" cy="375" r="8" fill="#3b82f6"/>
+                        <text x="540" y="400" text-anchor="middle" fill="#3b82f6" font-size="13" font-weight="600">Zimbabwe</text>
+                    </g>
+                    
+                    <!-- Ghana -->
+                    <g class="country-marker" filter="url(#glow)">
+                        <circle cx="430" cy="260" r="7" fill="#8b5cf6"/>
+                        <text x="400" y="260" text-anchor="end" fill="#8b5cf6" font-size="13" font-weight="600">Ghana</text>
+                    </g>
+                    
+                    <!-- Sri Lanka -->
+                    <g class="country-marker" filter="url(#glow)">
+                        <circle cx="740" cy="290" r="9" fill="#10b981"/>
+                        <text x="740" y="315" text-anchor="middle" fill="#10b981" font-size="14" font-weight="600">Sri Lanka</text>
+                    </g>
+                    
+                    <!-- Thailand -->
+                    <g class="country-marker" filter="url(#glow)">
+                        <circle cx="780" cy="250" r="7" fill="#8b5cf6"/>
+                        <text x="810" y="250" text-anchor="start" fill="#8b5cf6" font-size="13" font-weight="600">Thailand</text>
+                    </g>
+                    
+                    <!-- Bahrain -->
+                    <g class="country-marker" filter="url(#glow)">
+                        <circle cx="600" cy="210" r="6" fill="#8b5cf6"/>
+                        <text x="600" y="195" text-anchor="middle" fill="#8b5cf6" font-size="12" font-weight="600">Bahrain</text>
+                    </g>
+
+                    <!-- Connection Lines Animation -->
+                    <g stroke="#10b981" stroke-width="1" fill="none" opacity="0.4">
+                        <path d="M560,290 Q600,200 600,210">
+                            <animate attributeName="stroke-dasharray" values="0,500;100,500" dur="3s" repeatCount="indefinite"/>
+                        </path>
+                        <path d="M560,290 Q650,250 740,290">
+                            <animate attributeName="stroke-dasharray" values="0,500;150,500" dur="4s" repeatCount="indefinite"/>
+                        </path>
+                    </g>
+                </svg>
+            </div>
+
+            <div class="countries-panel">
+                <h2 class="panel-title">🏆 TOP COUNTRIES</h2>
+                <div class="countries-list">
+                    <div class="country-item">
+                        <div class="country-rank">1</div>
+                        <div class="country-flag">🇰🇪</div>
+                        <div class="country-info">
+                            <div class="country-name">Kenya</div>
+                            <div class="country-sub">East Africa</div>
+                        </div>
+                        <div class="country-value">1,537</div>
+                    </div>
+                    <div class="country-item">
+                        <div class="country-rank">2</div>
+                        <div class="country-flag">🇺🇬</div>
+                        <div class="country-info">
+                            <div class="country-name">Uganda</div>
+                            <div class="country-sub">East Africa</div>
+                        </div>
+                        <div class="country-value">741</div>
+                    </div>
+                    <div class="country-item">
+                        <div class="country-rank">3</div>
+                        <div class="country-flag">🇲🇼</div>
+                        <div class="country-info">
+                            <div class="country-name">Malawi</div>
+                            <div class="country-sub">Southeast Africa</div>
+                        </div>
+                        <div class="country-value">463</div>
+                    </div>
+                    <div class="country-item">
+                        <div class="country-rank">4</div>
+                        <div class="country-flag">🇿🇼</div>
+                        <div class="country-info">
+                            <div class="country-name">Zimbabwe</div>
+                            <div class="country-sub">Southern Africa</div>
+                        </div>
+                        <div class="country-value">365</div>
+                    </div>
+                    <div class="country-item">
+                        <div class="country-rank">5</div>
+                        <div class="country-flag">🇱🇰</div>
+                        <div class="country-info">
+                            <div class="country-name">Sri Lanka</div>
+                            <div class="country-sub">South Asia</div>
+                        </div>
+                        <div class="country-value">289</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Bottom Stats -->
+        <section class="bottom-stats">
+            <div class="bottom-stat">
+                <div class="bottom-stat-label">Today</div>
+                <div class="bottom-stat-value" id="todayValue">0</div>
+                <div class="bottom-stat-change">● Live</div>
+            </div>
+            <div class="bottom-stat">
+                <div class="bottom-stat-label">Yesterday</div>
+                <div class="bottom-stat-value" id="yesterdayValue">25</div>
+                <div class="bottom-stat-change">▲ +5</div>
+            </div>
+            <div class="bottom-stat">
+                <div class="bottom-stat-label">This Week</div>
+                <div class="bottom-stat-value" id="weekValue">179</div>
+                <div class="bottom-stat-change">▲ +14.7%</div>
+            </div>
+            <div class="bottom-stat">
+                <div class="bottom-stat-label">This Month</div>
+                <div class="bottom-stat-value" id="monthValue">1,100</div>
+                <div class="bottom-stat-change">▲ +12.2%</div>
+            </div>
+            <div class="bottom-stat">
+                <div class="bottom-stat-label">Conversion</div>
+                <div class="bottom-stat-value" id="conversionValue">36.7%</div>
+                <div class="bottom-stat-change">▲ +2.3%</div>
+            </div>
+        </section>
+    </div>
+
+    <!-- Ticker -->
+    <div class="ticker">
+        <span class="ticker-label">⏱️ LAST SHAHADAH:</span>
+        <span class="ticker-content" id="lastShahadah">2 hours 15 minutes ago from Uganda 🇺🇬</span>
+        <span style="margin-left: auto; color: #10b981;">|</span>
+        <span class="ticker-label">🌍 ACTIVE COUNTRIES:</span>
+        <span class="ticker-content">18 of 23</span>
+        <span style="color: #10b981;">|</span>
+        <span class="ticker-label">⚡ AI RESPONSE:</span>
+        <span class="ticker-content">1.2 seconds avg</span>
+    </div>
+
+    <script>
+        // ==========================================
+        // Google Sheets CSV URL - API_Summary
+        // ==========================================
+        const CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSQcpTJV3ISxcQw7IYEObVC-_aj2BKtK7SpsGh_mJ2QaoVuyW1yLXym9P_Ldk_eI_jSiAggYYLcpRRn/pub?gid=949209538&single=true&output=csv';
+        
+        // Data storage with latest values
+        let dashboardData = {
+            messages: 150051,
+            details: 12766,
+            shahadahs: 4772,
+            today: 13,
+            yesterday: 26,
+            week: 125,
+            month: 845,
+            conversion: 37.4,
+            countries: [
+                { name: 'KENYA', flag: '🇰🇪', shahadah: 1596, today: 1, week: 27 },
+                { name: 'UGANDA', flag: '🇺🇬', shahadah: 956, today: 1, week: 16 },
+                { name: 'SRI LANKA', flag: '🇱🇰', shahadah: 25065, today: 0, week: 0 },
+                { name: 'Malawi', flag: '🇲🇼', shahadah: 474, today: 0, week: 0 },
+                { name: 'Zimbabwe', flag: '🇿🇼', shahadah: 387, today: 0, week: 0 }
+            ]
+        };
+
+        // Country flags mapping
+        const countryFlags = {
+            'KENYA': '🇰🇪', 'Kenya': '🇰🇪',
+            'UGANDA': '🇺🇬', 'Uganda': '🇺🇬',
+            'MALAWI': '🇲🇼', 'Malawi': '🇲🇼',
+            'ZIMBABWE': '🇿🇼', 'Zimbabwe': '🇿🇼',
+            'SRI LANKA': '🇱🇰', 'Sri Lanka': '🇱🇰', 'SRI_LANKA': '🇱🇰',
+            'Ethiopia': '🇪🇹',
+            'Tanzania': '🇹🇿',
+            'Ghana': '🇬🇭',
+            'Thailand': '🇹🇭',
+            'Tamil': '🇮🇳',
+            'Mozambique': '🇲🇿',
+            'Rwanda': '🇷🇼',
+            'Burundi': '🇧🇮',
+            'Botswana': '🇧🇼',
+            'South Africa': '🇿🇦', 'South_Africa': '🇿🇦',
+            'South Sudan': '🇸🇸', 'South_Sudan': '🇸🇸',
+            'Eswatini': '🇸🇿',
+            'Guatemala': '🇬🇹',
+            'Worldwide': '🌍',
+            'GCC': '🇧🇭',
+            'Bahrain Campaign': '🇧🇭',
+            'Nepal': '🇳🇵',
+            'Nigeria': '🇳🇬',
+            'Zambia': '🇿🇲',
+            'Mauritius': '🇲🇺',
+            'Lesotho': '🇱🇸',
+            'Togo': '🇹🇬'
+        };
+
+        // ==========================================
+        // Fetch and Parse CSV Data from API_Summary
+        // ==========================================
+        async function fetchSheetData() {
+            try {
+                const response = await fetch(CSV_URL);
+                if (!response.ok) throw new Error('Network error');
+                
+                const csvText = await response.text();
+                parseAPIData(csvText);
+                updateDisplay();
+                console.log('✅ Data refreshed at', new Date().toLocaleTimeString());
+            } catch (error) {
+                console.log('⚠️ Using cached data:', error.message);
+            }
+        }
+
+        function parseAPIData(csv) {
+            const lines = csv.split('\n');
+            let countriesData = [];
+            
+            // Create a map for easy lookup
+            const dataMap = {};
+            for (let i = 0; i < lines.length; i++) {
+                const line = lines[i].replace(/\r/g, '');
+                const cells = line.split(',');
+                const metric = cells[0] ? cells[0].trim() : '';
+                const value = cells[1] ? cells[1].trim() : '';
+                if (metric) dataMap[metric] = value;
+            }
+            
+            // Parse worldwide totals
+            if (dataMap['total_shahadahs']) dashboardData.shahadahs = parseInt(dataMap['total_shahadahs']) || dashboardData.shahadahs;
+            if (dataMap['total_details']) dashboardData.details = parseInt(dataMap['total_details']) || dashboardData.details;
+            if (dataMap['total_messages']) dashboardData.messages = parseInt(dataMap['total_messages']) || dashboardData.messages;
+            
+            // Parse periods
+            if (dataMap['today_shahadahs']) dashboardData.today = parseInt(dataMap['today_shahadahs']) || 0;
+            if (dataMap['yesterday_shahadahs']) dashboardData.yesterday = parseInt(dataMap['yesterday_shahadahs']) || 0;
+            if (dataMap['this_week_shahadahs']) dashboardData.week = parseInt(dataMap['this_week_shahadahs']) || 0;
+            if (dataMap['this_month_shahadahs']) dashboardData.month = parseInt(dataMap['this_month_shahadahs']) || 0;
+            if (dataMap['this_year_shahadahs']) dashboardData.shahadahs = parseInt(dataMap['this_year_shahadahs']) || dashboardData.shahadahs;
+            
+            // Parse country data (up to 30 countries)
+            for (let i = 1; i <= 30; i++) {
+                const num = i.toString().padStart(2, '0');
+                const countryName = dataMap[`country_${num}_name`];
+                
+                if (countryName && countryName !== '' && countryName !== '0') {
+                    const shahadahs = parseInt(dataMap[`country_${num}_shahadahs`]) || 0;
+                    const today = parseInt(dataMap[`country_${num}_today`]) || 0;
+                    const week = parseInt(dataMap[`country_${num}_week`]) || 0;
+                    
+                    if (shahadahs > 0) {
+                        countriesData.push({
+                            name: countryName,
+                            flag: countryFlags[countryName] || '🌍',
+                            shahadah: shahadahs,
+                            today: today,
+                            week: week
+                        });
+                    }
+                }
+            }
+            
+            // Sort countries by shahadah and take top 5
+            if (countriesData.length > 0) {
+                countriesData.sort((a, b) => b.shahadah - a.shahadah);
+                dashboardData.countries = countriesData.slice(0, 5);
+            }
+            
+            // Calculate conversion rate
+            if (dashboardData.details > 0) {
+                dashboardData.conversion = ((dashboardData.shahadahs / dashboardData.details) * 100).toFixed(1);
+            }
+        }
+
+        // ==========================================
+        // Update Display
+        // ==========================================
+        function updateDisplay() {
+            // Main stats
+            document.getElementById('totalMessages').textContent = formatNumber(dashboardData.messages);
+            document.getElementById('totalDetails').textContent = formatNumber(dashboardData.details);
+            document.getElementById('totalShahadahs').textContent = formatNumber(dashboardData.shahadahs);
+            
+            // Period stats
+            document.getElementById('todayValue').textContent = dashboardData.today;
+            document.getElementById('yesterdayValue').textContent = dashboardData.yesterday;
+            document.getElementById('weekValue').textContent = formatNumber(dashboardData.week);
+            document.getElementById('monthValue').textContent = formatNumber(dashboardData.month);
+            document.getElementById('conversionValue').textContent = dashboardData.conversion + '%';
+            
+            // Countries list
+            updateCountriesList();
+            
+            // Update last shahadah ticker
+            if (dashboardData.today > 0) {
+                const topCountryToday = dashboardData.countries.find(c => c.today > 0);
+                if (topCountryToday) {
+                    document.getElementById('lastShahadah').textContent = 
+                        `Today: ${dashboardData.today} shahadahs | Latest from ${topCountryToday.name} ${topCountryToday.flag}`;
+                }
+            }
+        }
+
+        function formatNumber(num) {
+            if (num >= 1000000) {
+                return (num / 1000000).toFixed(1) + 'M';
+            }
+            if (num >= 1000) {
+                return num.toLocaleString();
+            }
+            return num;
+        }
+
+        function updateCountriesList() {
+            const container = document.querySelector('.countries-list');
+            if (!container) return;
+            
+            container.innerHTML = dashboardData.countries.map((country, index) => `
+                <div class="country-item">
+                    <div class="country-rank">${index + 1}</div>
+                    <div class="country-flag">${country.flag}</div>
+                    <div class="country-info">
+                        <div class="country-name">${country.name}</div>
+                        <div class="country-sub">${country.today > 0 ? '🔥 +' + country.today + ' today' : getRegion(country.name)}</div>
+                    </div>
+                    <div class="country-value">${country.shahadah.toLocaleString()}</div>
+                </div>
+            `).join('');
+        }
+
+        function getRegion(country) {
+            const regions = {
+                'KENYA': 'East Africa', 'Kenya': 'East Africa',
+                'UGANDA': 'East Africa', 'Uganda': 'East Africa',
+                'MALAWI': 'Southeast Africa', 'Malawi': 'Southeast Africa',
+                'ZIMBABWE': 'Southern Africa', 'Zimbabwe': 'Southern Africa',
+                'SRI LANKA': 'South Asia', 'Sri Lanka': 'South Asia',
+                'Ethiopia': 'East Africa',
+                'Tanzania': 'East Africa',
+                'Ghana': 'West Africa',
+                'Thailand': 'Southeast Asia',
+                'Tamil': 'South Asia',
+                'Mozambique': 'Southeast Africa',
+                'Rwanda': 'East Africa'
+            };
+            return regions[country] || 'Active';
+        }
+
+        // ==========================================
+        // Time Update
+        // ==========================================
+        function updateDateTime() {
+            const now = new Date();
+            document.getElementById('currentTime').textContent = now.toLocaleTimeString('en-US', {
+                hour: '2-digit',
+                minute: '2-digit',
+                second: '2-digit',
+                hour12: true
+            });
+            document.getElementById('currentDate').textContent = now.toLocaleDateString('en-US', {
+                weekday: 'long',
+                month: 'long',
+                day: 'numeric',
+                year: 'numeric'
+            });
+        }
+        setInterval(updateDateTime, 1000);
+        updateDateTime();
+
+        // ==========================================
+        // Alert System
+        // ==========================================
+        let lastTodayCount = dashboardData.today;
+
+        function checkForNewShahadah() {
+            if (dashboardData.today > lastTodayCount) {
+                const diff = dashboardData.today - lastTodayCount;
+                showAlert(`🎉 ${diff} NEW SHAHADAH${diff > 1 ? 'S' : ''}! ALLAHU AKBAR!`);
+                lastTodayCount = dashboardData.today;
+            }
+        }
+
+        function showAlert(message) {
+            const banner = document.getElementById('alertBanner');
+            document.getElementById('alertText').textContent = message;
+            banner.classList.add('show');
+            playNotificationSound();
+            setTimeout(() => banner.classList.remove('show'), 10000);
+        }
+
+        function playNotificationSound() {
+            try {
+                const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                [523, 659, 784].forEach((freq, i) => {
+                    setTimeout(() => {
+                        const osc = audioContext.createOscillator();
+                        const gain = audioContext.createGain();
+                        osc.connect(gain);
+                        gain.connect(audioContext.destination);
+                        osc.frequency.value = freq;
+                        osc.type = 'sine';
+                        gain.gain.setValueAtTime(0.2, audioContext.currentTime);
+                        gain.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.3);
+                        osc.start();
+                        setTimeout(() => osc.stop(), 300);
+                    }, i * 100);
+                });
+            } catch (e) {}
+        }
+
+        // ==========================================
+        // Initialize & Auto-refresh
+        // ==========================================
+        
+        // Initial display
+        updateDisplay();
+        
+        // Fetch data immediately
+        fetchSheetData();
+        
+        // Auto-refresh every 30 seconds
+        setInterval(() => {
+            fetchSheetData();
+            checkForNewShahadah();
+        }, 30000);
+
+        // Demo alert after 3 seconds (remove in production)
+        // setTimeout(() => showAlert('🎉 NEW SHAHADAH FROM UGANDA! ALLAHU AKBAR!'), 3000);
+    </script>
+</body>
+</html>
