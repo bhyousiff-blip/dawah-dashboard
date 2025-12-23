@@ -1337,7 +1337,8 @@
         // Auto-refresh from Google Sheets every 30 seconds
         async function fetchSheetData() {
             try {
-                const response = await fetch(CSV_URL);
+                const liveUrl = CSV_URL + (CSV_URL.includes('?') ? '&' : '?') + 'nocache=' + Date.now();
+                const response = await fetch(liveUrl, { cache: 'no-store' });
                 if (!response.ok) throw new Error('Network error');
                 const csvText = await response.text();
                 
